@@ -1,0 +1,38 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Client",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/client",
+            "args": [
+                "${workspaceFolder}/test_data_files/test_file.txt",
+                "8080"
+            ],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "cmake_build"
+        },
+        {
+            "name": "Debug Server",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/server",
+            "args": [
+                "${workspaceFolder}/test_data_files/config.json",
+                "8080"
+            ],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "cmake_build"
+        },
+        {
+            "name": "Debug Statistics",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/statistics",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "cmake_build"
+        }
+    ]
+}

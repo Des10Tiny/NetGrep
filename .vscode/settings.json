@@ -1,6 +1,8 @@
 {
     "cSpell.enabled": true,
     "cSpell.words": [
+        "DBUILD",
+        "DCMAKE",
         "fetchcontent",
         "fsanitize",
         "kaspersky",

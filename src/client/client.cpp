@@ -3,6 +3,8 @@
 #include <sstream>
 #include <stdexcept>
 #include <arpa/inet.h>
+#include <cstring>
+#include <cerrno>
 
 Client::Client(const std::string& ip, int port) {
     connect_to_server(ip, port);
@@ -21,7 +23,7 @@ void Client::send_file(const std::string& file_path) {
         if (sent < 0) {
             throw std::runtime_error(std::string("Client Error: send failed - ") + strerror(errno));
         }
-        
+
         total_sent += sent;
         bytes_left -= sent;
     }

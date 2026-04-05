@@ -30,6 +30,28 @@ add_executable(shared_stats_tests
 target_include_directories(shared_stats_tests PRIVATE ../src/server)
 target_link_libraries(shared_stats_tests gtest gtest_main pthread)
 
+
+add_executable(integration_tests
+    test_server/integration_tests.cpp
+    ../src/client/client.cpp
+    ../src/server/server.cpp
+    ../src/server/scanner.cpp
+    ../src/server/shared_stats.cpp
+)
+
+target_include_directories(integration_tests PRIVATE
+    ../src/client
+    ../src/server
+    ../src/common
+)
+
+target_link_libraries(integration_tests PRIVATE gtest gtest_main pthread common)
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+    target_link_libraries(integration_tests PRIVATE rt)
+endif()
+
+
 add_test(NAME ClientTests COMMAND client_tests)
 add_test(NAME ScannerTests COMMAND scanner_tests)
 add_test(NAME SharedStatsTests COMMAND shared_stats_tests)
+add_test(NAME IntegrationTests COMMAND integration_tests WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})

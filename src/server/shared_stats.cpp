@@ -1,30 +1,62 @@
 #include "shared_stats.hpp"
 
 #include <sys/mman.h>
+#include <fcntl.h>
 #include <unistd.h>
 #include <stdexcept>
 
-SharedStats::SharedStats(size_t num_patterns) : num_patterns_(num_patterns) {
+const char* shm_name = "/kaspersky_shm";
+
+SharedStats::SharedStats(size_t num_patterns, bool is_server)
+    : num_patterns_(num_patterns), is_server_(is_server) {
+
     size_bytes_ = sizeof(std::atomic<size_t>) * (num_patterns_ + 1);
+    creator_pid_ = getpid();
 
-    mapped_memory_ =
-        mmap(nullptr, size_bytes_, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+    if (is_server_) {
+        shm_fd_ = shm_open(shm_name, O_CREAT | O_RDWR, 0666);
 
-    if (mapped_memory_ == MAP_FAILED) {
-        throw std::runtime_error("Server Error: Failed to allocate shared memory via mmap");
+        if (shm_fd_ < 0) {
+            throw std::runtime_error("SharedStats Error: failed to shm_open");
+        }
+
+        if (ftruncate(shm_fd_, size_bytes_) == -1) {
+            throw std::runtime_error("SharedStats Error: failed to ftruncate");
+        }
+    } else {
+        shm_fd_ = shm_open(shm_name, O_RDWR, 0666);
+
+        if (shm_fd_ < 0) {
+            throw std::runtime_error("SharedStats Error: Server is not running or memory missing");
+        }
     }
 
-    total_files_ = new (mapped_memory_) std::atomic<size_t>(0);
+    mapped_memory_ = mmap(nullptr, size_bytes_, PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd_, 0);
+
+    if (mapped_memory_ == MAP_FAILED) {
+        throw std::runtime_error("SharedStats Error: Failed to allocate shared memory via mmap");
+    }
+
+    total_files_ = reinterpret_cast<std::atomic<size_t>*>(mapped_memory_);
     patterns_array_ = total_files_ + 1;
 
-    for (size_t i = 0; i < num_patterns_; ++i) {
-        new (&patterns_array_[i]) std::atomic<size_t>(0);
+    if (is_server_) {
+        new (total_files_) std::atomic<size_t>(0);
+        for (size_t i = 0; i < num_patterns_; ++i) {
+            new (&patterns_array_[i]) std::atomic<size_t>(0);
+        }
     }
 }
 
 SharedStats::~SharedStats() {
     if (mapped_memory_ != MAP_FAILED) {
         munmap(mapped_memory_, size_bytes_);
+    }
+    if (shm_fd_ >= 0) {
+        close(shm_fd_);
+    }
+    if (is_server_ && getpid() == creator_pid_) {
+        shm_unlink(shm_name);
     }
 }
 

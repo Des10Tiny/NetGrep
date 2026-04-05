@@ -28,7 +28,8 @@ int main(int argc, char* argv[]) {
         client.send_file(file_path);
         std::cout << "The file has been sent.\nWaiting for scan results...\n";
         std::string result = client.receive_result();
-        std::cout << "\n ------------- Report from Server -------------\n" << result << "\n";
+        std::cout << "\n------------- Report from Server -------------\n" << result << "\n";
+        std::cout << "-----------------------------------------------\n\n";
 
     } catch (const std::exception& e) {
         std::cerr << "Critical failure: \n" << e.what() << "\n";

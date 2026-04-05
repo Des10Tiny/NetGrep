@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.16)
 project(kaspersky)
 
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+    target_link_libraries(server PRIVATE rt)
+endif()
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror")

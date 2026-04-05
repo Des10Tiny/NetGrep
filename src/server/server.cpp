@@ -124,8 +124,8 @@ void Server::print_final_statistics() const {
     for (size_t i = 0; i < patterns.size(); ++i) {
         size_t count = stats_.get_threat_count(i);
         if (count > 0) {
-            std::cout << "Threat '" << patterns[i] << "' found " << count << " times.\n";
+            std::cout << "Threat '" << patterns[i] << "' found " << count << " times\n";
         }
     }
-    std::cout << "--------------------------------------------\n";
+    std::cout << "-----------------------------------------------\n";
 }

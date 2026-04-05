@@ -11,6 +11,7 @@ add_executable(client
 target_link_libraries(client PRIVATE common)
 target_include_directories(client PRIVATE client)
 
+
 add_executable(server
     server/main.cpp
     server/server.cpp
@@ -19,3 +20,18 @@ add_executable(server
 )
 target_link_libraries(server PRIVATE common)
 target_include_directories(server PRIVATE server)
+
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+    target_link_libraries(server PRIVATE rt)
+endif()
+
+
+add_executable(statistics
+    statistics/main.cpp
+    server/shared_stats.cpp
+)
+target_include_directories(statistics PRIVATE server)
+
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+    target_link_libraries(statistics PRIVATE rt)
+endif()

@@ -1,4 +1,6 @@
-DANGER_EXEC
-VIRUS_INJECT
-Bad Words
-Trojan
+WIN32:Trojan-Gen
+Exploit.CVE-2021-44228.Log4j
+Ransom:Win32/WannaCrypt
+Backdoor.CobaltStrike.Beacon
+XMRig_Miner_Payload
+Rootkit.Linux.Hidepid

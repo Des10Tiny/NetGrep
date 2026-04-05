@@ -6,9 +6,11 @@
         "DCMAKE",
         "fetchcontent",
         "fsanitize",
+        "Hidepid",
         "kaspersky",
         "makeavailable",
         "pthread",
+        "userland",
         "Werror",
         "Wextra"
     ]

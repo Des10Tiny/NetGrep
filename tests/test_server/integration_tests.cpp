@@ -2,8 +2,10 @@
 #include "client.hpp"
 #include "shared_stats.hpp"
 #include <gtest/gtest.h>
+#include <string>
 #include <thread>
 #include <chrono>
+#include <unordered_map>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
@@ -80,7 +82,19 @@ TEST_F(IntegrationTest, HandlesInfectedFileCorrectly) {
     client.send_file("tests/test_client/data/infected_file.txt");
     std::string result = client.receive_result();
 
+    std::unordered_map<std::string, int> answer = {
+        {"WIN32:Trojan-Gen", 1},        {"Exploit.CVE-2021-44228.Log4j", 3},
+        {"Ransom:Win32/WannaCrypt", 2}, {"Backdoor.CobaltStrike.Beacon", 3},
+        {"XMRig_Miner_Payload", 1},     {"Rootkit.Linux.Hidepid", 1}};
+
     EXPECT_TRUE(result.find("DANGER: Infected") != std::string::npos);
+
+    for (const auto& [name, count] : answer) {
+        EXPECT_TRUE(result.find(name) != std::string::npos);
+
+        std::string stat = name + "(" + std::to_string(count) + ")";
+        EXPECT_TRUE(result.find(stat) != std::string::npos);
+    }
 }
 
 TEST_F(IntegrationTest, StatisticsMemoryUpdatesCorrectly) {

@@ -5,9 +5,9 @@
             "name": "Debug Client",
             "type": "lldb",
             "request": "launch",
-            "program": "${workspaceFolder}/build/client",
+            "program": "${workspaceFolder}/build/src/client",
             "args": [
-                "${workspaceFolder}/test_data_files/test_file.txt",
+                "${workspaceFolder}/tests/test_client/data/client_file.txt",
                 "8080"
             ],
             "cwd": "${workspaceFolder}",
@@ -17,7 +17,7 @@
             "name": "Debug Server",
             "type": "lldb",
             "request": "launch",
-            "program": "${workspaceFolder}/build/server",
+            "program": "${workspaceFolder}/build/src/server",
             "args": [
                 "${workspaceFolder}/test_data_files/config.json",
                 "8080"
@@ -29,7 +29,7 @@
             "name": "Debug Statistics",
             "type": "lldb",
             "request": "launch",
-            "program": "${workspaceFolder}/build/statistics",
+            "program": "${workspaceFolder}/build/src/statistics",
             "args": [],
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "cmake_build"

@@ -13,6 +13,19 @@ endif()
 option(BUILD_TESTS "Build all unit tests" ON)
 add_subdirectory(src)
 
+if(CMAKE_BUILD_TYPE MATCHES "Release")
+    set(BUILD_TESTS OFF)
+    include(CheckIPOSupported)
+    check_ipo_supported(RESULT ipo_supported OUTPUT error)
+
+    if(ipo_supported)
+        set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+    endif()
+
+endif()
+
+
+
 if(BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)
